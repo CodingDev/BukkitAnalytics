@@ -18,6 +18,9 @@ public class BukkitAnalyticsEvents implements Listener {
 	@EventHandler
 	public void onJoinEvent(PlayerJoinEvent e){
 		bukkitAnalytics.getReport().countEvent(BukkitAnalyticsEventType.PLAYER_JOIN);
+		if(bukkitAnalytics.newVersion){
+			e.getPlayer().sendMessage(bukkitAnalytics.prefix + String.format(bukkitAnalytics.getMessage("newVersion"), bukkitAnalytics.versionNumber));
+		}
 	}
 	
 	@EventHandler
