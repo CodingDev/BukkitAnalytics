@@ -46,8 +46,19 @@ public class BukkitAnalytics extends JavaPlugin{
 	}
 	
 	public void initConfig(){
-		getConfig().addDefault("trackingKey", "");
-		getConfig().addDefault("debugMode", false);
+		//Basic Options
+		getConfig().addDefault("Config.TrackingKey", "");
+		getConfig().addDefault("Config.DebugMode", false);
+		
+		//Tracking Options
+		getConfig().addDefault("Track.Plugins", true);
+		getConfig().addDefault("Track.Players.Online", true);
+		getConfig().addDefault("Track.Balance.Online", true);
+		getConfig().addDefault("Track.Balance.Offline", true);
+		for(BukkitAnalyticsEventType eventType : BukkitAnalyticsEventType.values()){
+			getConfig().addDefault("Track.Events." + eventType.name(), true);
+		}
+		
 		getConfig().options().copyDefaults(true);
 		saveConfig();
 	}
@@ -57,7 +68,7 @@ public class BukkitAnalytics extends JavaPlugin{
 	}
 	
 	public boolean isDebugMode(){
-		return getConfig().getBoolean("debugMode");
+		return getConfig().getBoolean("Config.DebugMode");
 	}
 	
 	public void sendDebugMessage(String message) {
