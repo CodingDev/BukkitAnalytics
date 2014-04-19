@@ -27,7 +27,7 @@ public class BukkitAnalyticsSendReport extends Thread{
 		if(bukkitAnalytics.isDebugMode()){
 			return "http://127.0.0.1/api/v1/report.php";
 		}else{
-			return "http://BukkitAnalytics.net/api/v1/report.php";
+			return "http://Track.BukkitAnalytics.net/v1/report.php";
 		}
 	}
 	
