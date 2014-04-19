@@ -1,0 +1,4 @@
+name: BukkitAnalytics
+version: 1.0
+main: de.CodingDev.BukkitAnalytics.BukkitAnalytics
+softdepend: [Vault]
