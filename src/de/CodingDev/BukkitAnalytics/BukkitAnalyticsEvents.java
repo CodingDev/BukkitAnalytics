@@ -109,7 +109,7 @@ public class BukkitAnalyticsEvents implements Listener {
 	
 	@EventHandler
 	public void onEvent(EntityRegainHealthEvent e){
-		bukkitAnalytics.getReport().countEvent(BukkitAnalyticsEventType.ENTITY_REGAIN_HEALTH);
+		bukkitAnalytics.getReport().countEvent(BukkitAnalyticsEventType.ENTITY_REGAIN_HEALTH, e.getAmount());
 	}
 	
 	@EventHandler
