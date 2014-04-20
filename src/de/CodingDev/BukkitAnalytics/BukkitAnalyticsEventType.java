@@ -1,6 +1,8 @@
 package de.CodingDev.BukkitAnalytics;
 
 public enum BukkitAnalyticsEventType {
+	//Don not rename! Ony R3N3PDE has access to Rename!
+	//START Version 1.2
 	ASYNC_PLAYER_CHAT,
 	BLOCK_BREAK,
 	BLOCK_PLACE,
@@ -8,6 +10,7 @@ public enum BukkitAnalyticsEventType {
 	DISTANCE_MOVED_IN_MINECART,
 	DISTANCE_MOVED_IN_UNKNOW_VEHICLE,
 	DISTANCE_MOVED_TOTAL,
+	ENTITY_DAMAGE,
 	ENTITY_DEATH,
 	ENTITY_EXPLODE,
 	ENTITY_REGAIN_HEALTH,
@@ -17,9 +20,10 @@ public enum BukkitAnalyticsEventType {
 	PLAYER_BUCKET_EMPTY,
 	PLAYER_BUCKET_FILL,
 	PLAYER_COMMAND,
+	PLAYER_DAMAGE,
 	PLAYER_DEATH,
 	PLAYER_EXPLODE,
-	PLAYER_DROP_IREM,
+	PLAYER_DROP_ITEM,
 	PLAYER_EGG_TRROW,
 	PLAYER_FISH,
 	PLAYER_JOIN,
@@ -29,6 +33,7 @@ public enum BukkitAnalyticsEventType {
 	PLAYER_RESPAWN,
 	PLAYER_TELEPORT,
 	POTION_SPLASH,
-	PROJECTIL_EHIT,
+	PROJECTILE_HIT,
 	SERVER_LIST_PING;
+	//END Version 1.2
 }

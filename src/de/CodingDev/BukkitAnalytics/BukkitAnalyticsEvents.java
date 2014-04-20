@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.NotePlayEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
@@ -104,7 +105,7 @@ public class BukkitAnalyticsEvents implements Listener {
 	
 	@EventHandler
 	public void onEvent(ProjectileHitEvent e){
-		bukkitAnalytics.getReport().countEvent(BukkitAnalyticsEventType.PROJECTIL_EHIT);
+		bukkitAnalytics.getReport().countEvent(BukkitAnalyticsEventType.PROJECTILE_HIT);
 	}
 	
 	@EventHandler
@@ -173,11 +174,20 @@ public class BukkitAnalyticsEvents implements Listener {
 	
 	@EventHandler
 	public void onEvent(PlayerDropItemEvent e){
-		bukkitAnalytics.getReport().countEvent(BukkitAnalyticsEventType.PLAYER_DROP_IREM);
+		bukkitAnalytics.getReport().countEvent(BukkitAnalyticsEventType.PLAYER_DROP_ITEM);
 	}
 	
 	@EventHandler
 	public void onEvent(PlayerCommandPreprocessEvent e){
 		bukkitAnalytics.getReport().countEvent(BukkitAnalyticsEventType.PLAYER_COMMAND);
+	}
+	
+	@EventHandler
+	public void onEvent(EntityDamageEvent e){
+		if(e.getEntity() instanceof Player){
+			bukkitAnalytics.getReport().countEvent(BukkitAnalyticsEventType.PLAYER_DAMAGE, e.getDamage());
+		}else{
+			bukkitAnalytics.getReport().countEvent(BukkitAnalyticsEventType.ENTITY_DAMAGE, e.getDamage());
+		}
 	}
 }
