@@ -82,9 +82,9 @@ public class BukkitAnalyticsEvents implements Listener {
 	@EventHandler
 	public void onEvent(EntityDeathEvent e){
 		if(e.getEntity() instanceof Player){
-			bukkitAnalytics.getReport().countEvent(BukkitAnalyticsEventType.ENTITY_DEATH);
-		}else{
 			bukkitAnalytics.getReport().countEvent(BukkitAnalyticsEventType.PLAYER_DEATH);
+		}else{
+			bukkitAnalytics.getReport().countEvent(BukkitAnalyticsEventType.ENTITY_DEATH);
 		}
 	}
 	

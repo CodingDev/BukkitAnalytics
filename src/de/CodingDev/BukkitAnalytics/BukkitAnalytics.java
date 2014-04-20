@@ -1,5 +1,6 @@
 package de.CodingDev.BukkitAnalytics;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
@@ -33,7 +34,7 @@ public class BukkitAnalytics extends JavaPlugin{
 		getLogger().info("Update Site: http://dev.bukkit.org/server-mods/bukkitanalytics/");
 		getLogger().info("Current Version: " + getDescription().getVersion());
 		getLogger().info("----------------------------------------");
-		uptime = System.currentTimeMillis()/1000;
+		uptime = getUnixTimestamp();
 		initConfig();
 		analyticsReport = new BukkitAnalyticsReport(this);
 		if(new BukkitAnalyticsSendReport(this, analyticsReport).validateKey(getAuthKey())){
@@ -102,6 +103,7 @@ public class BukkitAnalytics extends JavaPlugin{
 		getConfig().addDefault("Config.DebugMode", false);
 		getConfig().addDefault("Config.DebugServer", false);
 		getConfig().addDefault("Config.Language", "enUS");
+		getConfig().addDefault("Config.Ignore_SSL_because_Heartbleed_Bug", false);
 		
 		//Messages - enUS
 		getConfig().addDefault("Messages.enUS.newVersion", "We have released the version §c%s§6!");
@@ -183,5 +185,17 @@ public class BukkitAnalytics extends JavaPlugin{
 
 	public boolean useDebugServer() {
 		return getConfig().getBoolean("Config.DebugServer");
+	}
+
+	public long getUnixTimestamp() {
+		return System.currentTimeMillis()/1000;
+	}
+
+	public String getHTTPSchem() {
+		if(getConfig().getBoolean("Config.Ignore_SSL_because_Heartbleed_Bug")){
+			return "http";
+		}else{
+			return "https";
+		}
 	}
 }

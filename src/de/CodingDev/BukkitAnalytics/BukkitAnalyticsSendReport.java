@@ -2,7 +2,9 @@ package de.CodingDev.BukkitAnalytics;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -27,17 +29,17 @@ public class BukkitAnalyticsSendReport extends Thread{
 	
 	private String getTrackingAPIServer(){
 		if(bukkitAnalytics.isDebugMode() && bukkitAnalytics.useDebugServer()){
-			return "https://api.bukkitanalytics.net/1.0/?query=Tracking&debug=true";
+			return bukkitAnalytics.getHTTPSchem() + "://api.bukkitanalytics.net/1.0/?query=Tracking&debug=true";
 		}else{
-			return "https://api.bukkitanalytics.net/1.0/?query=Tracking";
+			return bukkitAnalytics.getHTTPSchem() + "://api.bukkitanalytics.net/1.0/?query=Tracking";
 		}
 	}
 	
 	private String getAuthAPIServer(){
 		if(bukkitAnalytics.isDebugMode() && bukkitAnalytics.useDebugServer()){
-			return "https://api.bukkitanalytics.net/1.0/?query=Auth&debug=true";
+			return bukkitAnalytics.getHTTPSchem() + "://api.bukkitanalytics.net/1.0/?query=Auth&debug=true";
 		}else{
-			return "https://api.bukkitanalytics.net/1.0/?query=Auth";
+			return bukkitAnalytics.getHTTPSchem() + "://api.bukkitanalytics.net/1.0/?query=Auth";
 		}
 	}
 	
@@ -58,10 +60,25 @@ public class BukkitAnalyticsSendReport extends Thread{
 			}
 		}
 	}
+	
+	public void saveUndoneReport(String jsonReport){
+		File folder = new File(bukkitAnalytics.getDataFolder() + "/undoneReports/");
+		if(!folder.exists()){
+			folder.mkdir();
+		}
+		try{
+			PrintWriter out = new PrintWriter(bukkitAnalytics.getDataFolder() + "/undoneReports/" + bukkitAnalytics.getUnixTimestamp() + ".Report.json");
+			out.println(jsonReport);
+			out.close();
+		}catch(Exception outError){
+			bukkitAnalytics.getLogger().warning("Can not save a Offline report. Error: " + outError);
+		}
+	}
 
 	public void sendReport() {
 		bukkitAnalytics.sendDebugMessage("Sending BukkitAnalytics Report...");
 		String jsonReport = analyticsReport.getJsonReportData();
+		analyticsReport.clearReport();
 		bukkitAnalytics.sendDebugMessage("Report Data: " + jsonReport);
 		
 		try{
@@ -97,15 +114,18 @@ public class BukkitAnalyticsSendReport extends Thread{
 	 
 			//print result		
 			bukkitAnalytics.sendDebugMessage("Response Data: " + response.toString());
-			analyticsReport.clearReport();
 		}catch(Exception sendError){
 			bukkitAnalytics.getLogger().warning("Can not connect to the API Server. Error: " + sendError);
+			saveUndoneReport(jsonReport);
 		}
 		bukkitAnalytics.sendDebugMessage("Done!");
 	}
 
 	public boolean validateKey(String authKey) {
 		bukkitAnalytics.sendDebugMessage("Validate BukkitAnalytics Auth-Key...");		
+		if(bukkitAnalytics.isDebugMode()){
+			return true;
+		}
 		try{
 			URL obj = new URL(getAuthAPIServer());
 			HttpURLConnection con = (HttpURLConnection) obj.openConnection();
