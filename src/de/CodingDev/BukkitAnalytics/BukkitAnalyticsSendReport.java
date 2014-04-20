@@ -72,7 +72,7 @@ public class BukkitAnalyticsSendReport extends Thread{
 			con.setRequestMethod("POST");
 			con.setRequestProperty("User-Agent", USER_AGENT);
 	 
-			String urlParameters = "jsonReport=" + URLEncoder.encode(jsonReport);
+			String urlParameters = "jsonReport=" + URLEncoder.encode(jsonReport) + "&authKey=" + bukkitAnalytics.getAuthKey();
 	 
 			// Send post request
 			con.setDoOutput(true);
