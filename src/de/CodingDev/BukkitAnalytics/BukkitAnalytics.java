@@ -26,7 +26,13 @@ public class BukkitAnalytics extends JavaPlugin{
 	private long uptime;
 	
 	public void onEnable(){
-		getLogger().info("Enable BukkitAnalytics...");
+		getLogger().info("Try to enable BukkitAnalytics...");
+		getLogger().info("----------------------------------------");
+		getLogger().info("Created by CodingDev Developers");
+		getLogger().info("Developer Website: http://codingdev.de/");
+		getLogger().info("Update Site: http://dev.bukkit.org/server-mods/bukkitanalytics/");
+		getLogger().info("Current Version: " + getDescription().getVersion());
+		getLogger().info("----------------------------------------");
 		uptime = System.currentTimeMillis()/1000;
 		initConfig();
 		analyticsReport = new BukkitAnalyticsReport(this);
@@ -37,14 +43,22 @@ public class BukkitAnalytics extends JavaPlugin{
 			sendReport = new BukkitAnalyticsSendReport(this, analyticsReport);
 			sendReport.setRunning(true);
 			sendReport.start();
+			checkUpdates();
+			getLogger().info("----------------------------------------");
 			getLogger().info("BukkitAnalytics was enabled!");
 		}else{
-			getLogger().warning("BukkitAnalytics can not started!");
+			checkUpdates();
+			getLogger().info("----------------------------------------");
 			getLogger().warning("Your Auth-Key is not valid. (Your Key: " + getAuthKey() + ")");
+			getLogger().info("----------------------------------------");
+			getLogger().warning("BukkitAnalytics can not started!");
 			getServer().getPluginManager().disablePlugin(this);
 		}
-		
-		
+	}
+	
+	private void checkUpdates() {
+		getLogger().info("----------------------------------------");
+		getLogger().info("Checking for Updates...");
 		Updater updater = new Updater(this, 78526, this.getFile(), UpdateType.NO_DOWNLOAD, true);
 		if (updater.getResult() == UpdateResult.UPDATE_AVAILABLE) {
 		    getLogger().info("New version available! (" + updater.getLatestName() + ")");
@@ -53,10 +67,10 @@ public class BukkitAnalytics extends JavaPlugin{
 		}else if (updater.getResult() == UpdateResult.NO_UPDATE) {
 		    getLogger().info("No new version available.");
 		}else{
-		    getLogger().info("Updater: " + updater.getResult());
+		    getLogger().info("Updater Result: " + updater.getResult());
 		}
 	}
-	
+
 	public void onDisable(){
 		getLogger().info("Disable BukkitAnalytics...");
 		if(sendReport != null){
@@ -121,6 +135,7 @@ public class BukkitAnalytics extends JavaPlugin{
 		
 		getConfig().options().copyDefaults(true);
 		saveConfig();
+		getLogger().info("----------------------------------------");
 	}
 	
 	public void initPermissions(){
