@@ -1,7 +1,7 @@
 package de.CodingDev.BukkitAnalytics;
 
 public enum BukkitAnalyticsEventType {
-	//Don not rename! Ony R3N3PDE has access to Rename!
+	//Don not rename! Only R3N3PDE has access to Rename!
 	//START Version 1.2
 	ASYNC_PLAYER_CHAT,
 	BLOCK_BREAK,
