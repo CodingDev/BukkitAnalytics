@@ -71,6 +71,33 @@ public class BukkitAnalyticsReport {
 	}
 
 	public String getJsonReportData() {
+		/*
+		 * Do not rename Keys! Only R3N3PDE has access to Rename! It is for API v1.2+
+		 * 
+		 * Do not rename Keys Like:
+		 * EventCountList
+		 * 		EventName
+		 * 		Count
+		 * IPBans
+		 * BannedPlayers
+		 * ServerWorlds
+		 * ServerMotd
+		 * ServerUptime
+		 * HasWhitelist
+		 * ServerOperators
+		 * WhitelistedPlayers
+		 * BukkitVersion
+		 * ServerVersion
+		 * PlayersMax
+		 * PlayersOnline
+		 * ServerPlugins
+		 * PlayersOnlineList
+		 * 		Username
+		 * 		World
+		 * VaultOnlineBalance
+		 * VaultTotalBalance
+		 * 
+		 * */
 		JSONObject obj = new JSONObject();
 		List<JSONObject> countList = new ArrayList<JSONObject>();
 		for(Entry<BukkitAnalyticsEventType, Double> d : countEvent.entrySet()){
