@@ -7,6 +7,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
+import com.sun.net.ssl.HttpsURLConnection;
+
 public class BukkitAnalyticsSendReport extends Thread{
 	private boolean b;
 	private BukkitAnalyticsReport analyticsReport;
@@ -24,10 +26,18 @@ public class BukkitAnalyticsSendReport extends Thread{
 	}
 	
 	private String getTrackingAPIServer(){
-		if(bukkitAnalytics.isDebugMode()){
-			return "http://127.0.0.1/api/v1/report.php";
+		if(bukkitAnalytics.isDebugMode() && bukkitAnalytics.useDebugServer()){
+			return "https://api.bukkitanalytics.net/1.0/?query=Tracking&debug=true";
 		}else{
-			return "http://Track.BukkitAnalytics.net/v1/report.php";
+			return "https://api.bukkitanalytics.net/1.0/?query=Tracking";
+		}
+	}
+	
+	private String getAuthAPIServer(){
+		if(bukkitAnalytics.isDebugMode() && bukkitAnalytics.useDebugServer()){
+			return "https://api.bukkitanalytics.net/1.0/?query=Auth&debug=true";
+		}else{
+			return "https://api.bukkitanalytics.net/1.0/?query=Auth";
 		}
 	}
 	
@@ -36,7 +46,7 @@ public class BukkitAnalyticsSendReport extends Thread{
 			try{
 				sendReport();
 				if(bukkitAnalytics.isDebugMode()){
-					Thread.sleep(1*1000);
+					Thread.sleep(5*1000);
 				}else{
 					Thread.sleep(60*1000);
 				}
@@ -61,7 +71,6 @@ public class BukkitAnalyticsSendReport extends Thread{
 			//add reuqest header
 			con.setRequestMethod("POST");
 			con.setRequestProperty("User-Agent", USER_AGENT);
-			con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
 	 
 			String urlParameters = "jsonReport=" + URLEncoder.encode(jsonReport);
 	 
@@ -90,9 +99,54 @@ public class BukkitAnalyticsSendReport extends Thread{
 			bukkitAnalytics.sendDebugMessage("Response Data: " + response.toString());
 			analyticsReport.clearReport();
 		}catch(Exception sendError){
-			
+			bukkitAnalytics.getLogger().warning("Can not connect to the API Server. Error: " + sendError);
 		}
 		bukkitAnalytics.sendDebugMessage("Done!");
+	}
+
+	public boolean validateKey(String authKey) {
+		bukkitAnalytics.sendDebugMessage("Validate BukkitAnalytics Auth-Key...");		
+		try{
+			URL obj = new URL(getAuthAPIServer());
+			HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+	 
+			//add reuqest header
+			con.setRequestMethod("POST");
+			con.setRequestProperty("User-Agent", USER_AGENT);
+	 
+			String urlParameters = "authKey=" + bukkitAnalytics.getAuthKey();
+	 
+			// Send post request
+			con.setDoOutput(true);
+			DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+			wr.writeBytes(urlParameters);
+			wr.flush();
+			wr.close();
+	 
+			int responseCode = con.getResponseCode();
+			bukkitAnalytics.sendDebugMessage("Sending 'POST' request to URL : " + getAuthAPIServer());
+			bukkitAnalytics.sendDebugMessage("Post parameters : " + urlParameters);
+			bukkitAnalytics.sendDebugMessage("Response Code : " + responseCode);
+	 
+			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+			String inputLine;
+			StringBuffer response = new StringBuffer();
+	 
+			while ((inputLine = in.readLine()) != null) {
+				response.append(inputLine);
+			}
+			in.close();
+	 
+			//print result		
+			bukkitAnalytics.sendDebugMessage("Response Data: " + response.toString());
+			bukkitAnalytics.sendDebugMessage("Done!");
+			if(responseCode == 200){
+				return true;
+			}
+		}catch(Exception sendError){
+			bukkitAnalytics.getLogger().warning("Can not connect to the API Server. Error: " + sendError);
+		}
+		return false;
 	}
 	
 }
